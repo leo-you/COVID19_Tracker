@@ -3,8 +3,9 @@ source("Main.R")
 body_timeline <- dashboardBody(
   fluidRow(
     column(
-      12,h3("Key Figures:")
-      ,fluidRow(
+      12,h3("Key Figures:"),
+      uiOutput("date_selected"),
+      fluidRow(
         valueBoxOutput("New_Confirmed",width = 3),
         valueBoxOutput("Total_Confirmed",width = 3),
         valueBoxOutput("New_Deaths",width = 3),
@@ -14,12 +15,8 @@ body_timeline <- dashboardBody(
     )
   ),
   fluidRow(
-    # box("Confirmed Case Map",width = 8, height = 600,
-    #     leafletOutput("map")),
-    # box("Summary Table",width = 4, height = 600,
-    #     DTOutput("summary_table"))
     column(
-      width = 6,h3("Case Map"),
+      width = 6,h3("Case Timeline Map"),
       radioButtons("heatmap_type","Map Type",choices = list("Confirmed Cases" = 1,
                                                        "Death Cases" = 2,
                                                        "Confirmed/1M" = 3,
@@ -38,7 +35,7 @@ body_timeline <- dashboardBody(
   fluidRow(
     column(12,align = "center",
       sliderInput("Date_Slider",label = "Select Date: ",min = min(us_evolution$date),
-                  max = max(us_evolution$date),value = latest_date,width = "90%",
+                  max = max(us_evolution$date),value = latest_date,width = "95%",
                   timeFormat="%d-%m-%Y",animate = animationOptions(playButton = "Play",loop = FALSE))
     )
   )

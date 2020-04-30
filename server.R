@@ -68,7 +68,7 @@ server <- function(input, output) {
   
   
   
-  output$table_population = renderDT({
+  output$table_population = renderDT({isolate(
     
     datatable(us_master_filtered()[,c(1,7:9)],rownames = FALSE, 
               colnames = c('State', 'Population', 'Confirmed Cases/Population (1M)', 'Deaths Cases/Population (1M)'),
@@ -93,6 +93,7 @@ server <- function(input, output) {
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
       ) 
+  )
   })
   
   proxy_table_population = dataTableProxy('table_population')
@@ -236,13 +237,35 @@ server <- function(input, output) {
     # summary table reactive functions
 
   state_daily_master_filtered <- reactive({
-    us_evolution %>%
-      filter(Province_State == input$state_filter) %>%
-      group_by(Province_State,date) %>%
-      summarise(confirmed = sum(cum_confirmed,na.rm = T),
-                deaths = sum(cum_deaths,na.rm = T),
-                daily_confirmed = sum(daily_confirmed,na.rm = T),
-                daily_deaths = sum(daily_deaths,na.rm = T))
+    
+    if (input$start_date == 1) {
+      us_evolution %>%
+        filter(Province_State == input$state_filter) %>%
+        group_by(Province_State,date) %>%
+        summarise(confirmed = sum(cum_confirmed,na.rm = T),
+                  deaths = sum(cum_deaths,na.rm = T),
+                  daily_confirmed = sum(daily_confirmed,na.rm = T),
+                  daily_deaths = sum(daily_deaths,na.rm = T)) %>%
+        filter(confirmed > 0)
+    } else if (input$start_date == 2) {
+      us_evolution %>%
+        filter(Province_State == input$state_filter) %>%
+        group_by(Province_State,date) %>%
+        summarise(confirmed = sum(cum_confirmed,na.rm = T),
+                  deaths = sum(cum_deaths,na.rm = T),
+                  daily_confirmed = sum(daily_confirmed,na.rm = T),
+                  daily_deaths = sum(daily_deaths,na.rm = T)) %>%
+        filter(confirmed >= 100)
+    } else if (input$start_date == 3) {
+      us_evolution %>%
+        filter(Province_State == input$state_filter) %>%
+        group_by(Province_State,date) %>%
+        summarise(confirmed = sum(cum_confirmed,na.rm = T),
+                  deaths = sum(cum_deaths,na.rm = T),
+                  daily_confirmed = sum(daily_confirmed,na.rm = T),
+                  daily_deaths = sum(daily_deaths,na.rm = T)) %>%
+        filter(deaths >= 100)
+    }
   })
   
   
@@ -266,8 +289,13 @@ server <- function(input, output) {
   
   output$heatmap = renderLeaflet({
     leaflet() %>%
-      addProviderTiles("CartoDB.Positron") %>%
-      setView(-98.483330, 38.712046, zoom = 4)
+      addProviderTiles("CartoDB.Positron",group = "light mode") %>%
+      addProviderTiles("CartoDB.DarkMatter",group = "dark mode") %>%
+      setView(-98.483330, 38.712046, zoom = 4) %>%
+      addLayersControl(
+        baseGroups = c("light mode", "dark mode"),
+        options = layersControlOptions(collapsed = FALSE)
+      )
   })
   
   observe({
@@ -298,40 +326,33 @@ server <- function(input, output) {
   # Heatmap reactive functions
   
   # Key Figures outputs
-
   
-  observeEvent(input$Date_Slider,{
-    output$New_Confirmed = renderValueBox({
+  output$date_selected = renderUI({
+    tagList(
+      helpText(paste0("As of: ",input$Date_Slider)),
+      br(),
       valueBox(us_evolution_us$daily_confirmed[us_evolution_us$date == input$Date_Slider], "New Cases", 
                icon = icon("ambulance", lib = "font-awesome"),
-               color = "yellow")
-    })
-  })
-
-    
-    output$Total_Confirmed = renderValueBox({
+               color = "yellow",width = 3),
       valueBox(us_evolution_us$cum_confirmed[us_evolution_us$date == input$Date_Slider], "Total Cases", 
                icon = icon("hospital", lib = "font-awesome"),
-               color = "yellow")
-    })
-    output$New_Deaths = renderValueBox({
+               color = "yellow",width = 3),
       valueBox(us_evolution_us$daily_deaths[us_evolution_us$date == input$Date_Slider], "New Deaths", 
                icon = icon("heartbeat", lib = "font-awesome"),
-               color = "yellow")
-    })
-    
-    output$Total_Deaths = renderValueBox({
+               color = "yellow",width = 3),
       valueBox(us_evolution_us$cum_deaths[us_evolution_us$date == input$Date_Slider], "Total Deaths", 
                icon = icon("first-aid", lib = "font-awesome"),
-               color = "yellow")
-    })
-    
-    
-    output$Date_Selection = renderText(paste0("As of ",input$Date_Slider))
-  
+               color = "yellow",width = 3),
+      br(),
+      helpText(paste0("last updated: ",latest_date))
+    )
+  })
+
 
   # Key Figures outputs
   
+  
+  # Analysis plots
 
   output$daily_trend <- renderPlotly({
     
@@ -464,4 +485,5 @@ server <- function(input, output) {
   })
   
 }
+# Analysis plots
 
