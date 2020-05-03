@@ -4,14 +4,7 @@ body_timeline <- dashboardBody(
   fluidRow(
     column(
       12,h3("Key Figures:"),
-      uiOutput("date_selected"),
-      fluidRow(
-        valueBoxOutput("New_Confirmed",width = 3),
-        valueBoxOutput("Total_Confirmed",width = 3),
-        valueBoxOutput("New_Deaths",width = 3),
-        valueBoxOutput("Total_Deaths",width = 3),
-
-      )
+      uiOutput("key_figures")
     )
   ),
   fluidRow(
@@ -28,15 +21,15 @@ body_timeline <- dashboardBody(
     tabBox(
       width = 6,title = "Summary Table", height = 600,
       tabPanel("By Case", DTOutput("table_case",height = 450)),
-      tabPanel("By Case/Population", DTOutput("table_population",height = 450))
-      
+      tabPanel("By Case/Population", DTOutput("table_population",height = 450)),
+      tabPanel("By Tested", DTOutput("table_tested",height = 450))
     )
   ),
   fluidRow(
     column(12,align = "center",
       sliderInput("Date_Slider",label = "Select Date: ",min = min(us_evolution$date),
                   max = max(us_evolution$date),value = latest_date,width = "95%",
-                  timeFormat="%d-%m-%Y",animate = animationOptions(playButton = "Play",loop = FALSE))
+                  animate = animationOptions(playButton = "Play",loop = FALSE))
     )
   )
 )

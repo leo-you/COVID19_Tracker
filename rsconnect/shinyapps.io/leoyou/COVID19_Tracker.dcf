@@ -1,0 +1,12 @@
+name: COVID19_Tracker
+title: COVID19_Tracker
+username:
+account: leoyou
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2212393
+bundleId: 3097909
+url: https://leoyou.shinyapps.io/covid19_tracker/
+when: 1588534234.93907
+asMultiple: FALSE
+asStatic: FALSE
