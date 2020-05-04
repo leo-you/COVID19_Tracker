@@ -8,27 +8,19 @@ body_analysis <- dashboardBody(
       tabPanel("Cumulative Line", plotlyOutput("cum_trend",height = "400px"),
                checkboxInput("log_y","Log y axis",value = FALSE)
       ),
-      tabPanel("Cumulative Bar", plotlyOutput("cum_bar",height = "400px"))
+      tabPanel("Cumulative Bar", plotlyOutput("cum_bar",height = "400px")),
+      tabPanel("Fatality", plotlyOutput("fatality",height = "400px"))
     ),
     
     tabBox(
       width = 6,title = "Testing and Hospital Data", height = 550,
       tabPanel("Testing Data", plotlyOutput("testing_trend",height = "400px")),
       tabPanel("Hospitalized Patients", plotlyOutput("hospitalized_data",height = "400px")),
-      tabPanel("Correlation", plotlyOutput("correlation",height = "400px"))
-    ),
-    
-    
-    # column(
-    #   6,h3("US Daily Trend"),
-    #   plotlyOutput("daily_trend",height = "400px")
-    # ),
-    # column(
-    #   6,h3("US Cumulative Cases")
-    #   # plotlyOutput("cum_trend",height = "400px"),
-    #   # checkboxInput("log_y","Log y axis",value = FALSE)
-    #   
-    # )
+      tabPanel("Correlation", plotlyOutput("correlation",height = "400px"),
+               helpText(tags$em("This is a bubble chart shows the correlation of COVID-19 confirmed case and death cases for each state,
+                        the size of the bubble represents the tested population, the color of the bubble represents test positive rate
+                        as the colorbar to the right shows.")))
+    )
   ),
   fluidRow(
     box(
@@ -48,7 +40,8 @@ body_analysis <- dashboardBody(
                                      "100th Death" = 3),
                       selected = 1)),
 
-      plotlyOutput("state_trend",height = "400px")
+      plotlyOutput("state_trend",height = "400px"),
+      helpText(tags$em("Recover data is shown depend on avalability for each state."))
       
     ),
     box(

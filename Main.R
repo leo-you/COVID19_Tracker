@@ -1,15 +1,11 @@
 # Load Library
-library(ggplot2)
 library(leaflet)
 library(leaflet.extras)
 library(plotly)
-library(reshape2)
 library(tidyr)
 library(tigris)
 library(DT)
 library(dplyr)
-library(dygraphs)
-library(xts)
 library(shiny)
 library(shinydashboard)
 
@@ -170,7 +166,8 @@ us_evolution_us <- state_daily_master %>%
             "hospitalized" = sum(hospitalizedCurrently,na.rm = T),
             "icu" = sum(inIcuCurrently,na.rm = T),
             "ventilator" = sum(onVentilatorCurrently,na.rm = T),
-            "positive_rate" = sum(positive,na.rm = T)/sum(total_tested,na.rm = T)
+            "positive_rate" = sum(positive,na.rm = T)/sum(total_tested,na.rm = T),
+            "death_rate" = sum(cum_deaths,na.rm = T)/sum(cum_confirmed,na.rm = T)
             )
 
   

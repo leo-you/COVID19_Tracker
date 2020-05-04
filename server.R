@@ -431,7 +431,9 @@ server <- function(input, output) {
       layout(yaxis = list(tickformat = "0",title = "Count"),
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              title = "US Daily Cases Trend",
-             barmode = "relative",legend = list(x = 0,y = 1))
+             barmode = "relative",legend = list(x = 0,y = 1)) %>%
+      config(displayModeBar = F)
+      
 
   })
   
@@ -440,19 +442,23 @@ server <- function(input, output) {
       plot_ly(x = ~date) %>%
         add_lines(data =us_evolution_us, y = ~cum_confirmed, name = "Cum Cases") %>%
         add_lines(data =us_evolution_us, y = ~cum_deaths, name = "Cum Deaths") %>%
+        add_lines(data =us_evolution_us, y = ~recovered, name = "Cum Recovered") %>%
         layout(yaxis = list(tickformat = "0",title = "Count"),
                title = "US Cumulative Cases",
                paper_bgcolor='transparent', plot_bgcolor='transparent',
-               legend = list(x = 0,y = 1))
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
 
     } else {
       plot_ly(x = ~date) %>%
         add_lines(data =us_evolution_us, y = ~log10(cum_confirmed), name = "Log Cases") %>%
         add_lines(data =us_evolution_us, y = ~log10(cum_deaths), name = "Log Deaths") %>%
+        add_lines(data =us_evolution_us, y = ~log10(recovered), name = "Log Recovered") %>%
         layout(yaxis = list(tickformat = "0",title = "Log"),
                title = "US Cumulative Cases",
                paper_bgcolor='transparent', plot_bgcolor='transparent',
-               legend = list(x = 0,y = 1))
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
     }
   })
   
@@ -462,13 +468,27 @@ server <- function(input, output) {
                           '<br><b>Cum Deaths:</b> ', cum_deaths,'<br><b>Cum Recovered:</b> ', recovered)
             ) %>%
       add_bars(y = ~cum_confirmed, name = 'Cum Cases') %>%
-      add_bars(y = ~(cum_deaths * -1), name = "Cum Deaths",hoverinfo = ~-cum_deaths) %>%
-      add_bars(y = ~(recovered * -1), name = "Cum Recovered",hoverinfo = ~-recovered) %>%
+      add_bars(y = ~(cum_deaths * -1), name = "Cum Deaths") %>%
+      add_bars(y = ~(recovered * -1), name = "Cum Recovered") %>%
       layout(yaxis = list(tickformat = "0",title = "Count"),
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              title = "US Cumulative Cases Barplot",
-             barmode = "relative",legend = list(x = 0,y = 1))
+             barmode = "relative",legend = list(x = 0,y = 1)) %>%
+      config(displayModeBar = F)
   }))
+  
+  
+  output$fatality <- renderPlotly(({
+    plot_ly(filter(us_evolution_us,us_evolution_us$cum_deaths > 100), x = ~date) %>%
+      add_lines(y = ~death_rate, name = 'Fatality') %>%
+      layout(yaxis = list(tickformat = ".1%",title = "Fatality"),
+             paper_bgcolor='transparent', plot_bgcolor='transparent',
+             title = "US Fatality",legend = list(x = 0,y = 1)) %>%
+      config(displayModeBar = F)
+  }))
+  
+  
+  
   
   output$testing_trend <- renderPlotly({
     plot_ly(us_evolution_us, x = ~date) %>%
@@ -487,20 +507,23 @@ server <- function(input, output) {
                overlaying = "y",
                side = "right",
                title = "positive %",
-               hoverformat = "%"
+               hoverformat = "%",
+               showgrid = FALSE
              )
-      )
+      ) %>%
+      config(displayModeBar = F)
   })
   
   output$hospitalized_data <- renderPlotly({
-    plot_ly(x = ~date) %>%
-      add_lines(data =us_evolution_us, y = ~hospitalized, name = "Hospitalized") %>%
-      add_lines(data =us_evolution_us, y = ~icu, name = "In ICU") %>%
-      add_lines(data =us_evolution_us, y = ~ventilator, name = "On Ventilator") %>%
+    plot_ly(data = filter(us_evolution_us,us_evolution_us$hospitalized > 0), x = ~date) %>%
+      add_lines(y = ~hospitalized, name = "Hospitalized") %>%
+      add_lines(y = ~icu, name = "In ICU") %>%
+      add_lines(y = ~ventilator, name = "On Ventilator") %>%
       layout(yaxis = list(tickformat = "0",title = "Count"),
              title = "US Hospitalized Patients",
              paper_bgcolor='transparent', plot_bgcolor='transparent',
-             legend = list(x = 0,y = 1))
+             legend = list(x = 0,y = 1)) %>%
+      config(displayModeBar = F)
   })
   
   output$correlation <- renderPlotly({
@@ -517,7 +540,8 @@ server <- function(input, output) {
              title = "",
              paper_bgcolor='transparent', plot_bgcolor='transparent'
       ) %>%
-      colorbar(title = "<b>Positive %</b>")
+      colorbar(title = "<b>Positive %</b>") %>%
+      config(displayModeBar = F)
     
   })
   
@@ -532,7 +556,8 @@ server <- function(input, output) {
         layout(yaxis = list(tickformat = "0",title = "Count"),
                title = paste0(input$state_filter," Cumulative Trend"),
                paper_bgcolor='transparent', plot_bgcolor='transparent',
-               legend = list(x = 0,y = 1))
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
     } else {
 
       plot_ly(state_daily_master_filtered(),x = ~date, hoverinfo = "text",
@@ -545,7 +570,8 @@ server <- function(input, output) {
         layout(yaxis = list(tickformat = "0",title = "Count"),
                title = paste0(input$state_filter," Daily Trend"),
                paper_bgcolor='transparent', plot_bgcolor='transparent', barmode = "relative",
-               legend = list(x = 0,y = 1))
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
     }
   })
   
@@ -596,7 +622,8 @@ server <- function(input, output) {
         ) %>%
         animation_slider(
           currentvalue = list(prefix = "Date ")
-        )
+        ) %>%
+        config(displayModeBar = F)
 
     } else {
       state_daily_top_deaths() %>%
@@ -619,7 +646,8 @@ server <- function(input, output) {
         ) %>%
         animation_slider(
           currentvalue = list(prefix = "Date ")
-        )
+        ) %>%
+        config(displayModeBar = F)
     }
 
   })

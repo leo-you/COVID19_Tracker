@@ -8,8 +8,8 @@ body_about <- dashboardBody(
           tags$h3("About this Project"),
           tags$br(),
           tags$h4("Background"),
-          "This dashboard demonstrates the recent COVID-19 pandemic that's happened in the US, from its first case in the state of Washington till most recent.
-          This dashboard allows the user to follow the timeline of the outbreak in each state of the US, the new cases and deaths cases, interactively. It also
+          "This app demonstrates the recent COVID-19 pandemic that's happened in the US, from its first case in the state of Washington till most recent.
+          This app allows the user to follow the timeline of the outbreak in each state of the US, the new cases and deaths cases, interactively. It also
           includes US COVID-19 testing data and hospitalized data from the COVID Tracking project.",
           tags$br(),
           tags$h4("Data Source"),
@@ -20,6 +20,20 @@ body_about <- dashboardBody(
           tags$br(),
           "This app is developed in R Studio using Shiny and was inspired by",
           tags$a("this video.",href = "https://www.youtube.com/watch?v=jr6YLRJbJ5M"),
+          tags$br(),
+          tags$br(),
+          "Packages used in ths tracker includes:",
+          tags$br(),
+          tags$br(),
+          tags$li("Shiny"),
+          tags$li("shinydashboard"),
+          tags$li("leaflet"),
+          tags$li("leaflet.extras"),
+          tags$li("plotly"),
+          tags$li("tidyr"),
+          tags$li("tigris"),
+          tags$li("DT"),
+          tags$li("dplyr"),
           tags$br(),
           tags$h4("Disclaimer"),
           "This tracker is a personal project and for education purpose only. The data and analysis only represent the creater's own
@@ -34,6 +48,7 @@ body_about <- dashboardBody(
           tags$a("Github",href = "https://github.com/leo-you"),
           "|",
           tags$a("Portfolio",href = "https://leoyou.netlify.com/"),
+          tags$br(),
           tags$br(),
           tags$br(),
           width = 12
