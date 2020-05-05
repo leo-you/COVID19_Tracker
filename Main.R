@@ -11,8 +11,6 @@ library(shinydashboard)
 
 # Load Library
 
-source("Utils.R")
-
 # Function to download and update data as necessary
 
 DownloadData <- function(){
@@ -133,7 +131,6 @@ state_daily_master_sub <- merge(state_daily_master_sub, us_test_evolution, by.x=
                             by.y=c("name","date"),all.x = TRUE)
   
 
-# Add daily columns tomorrow
 state_daily_master <- state_daily_master_sub %>%
   replace(is.na(.), 0) %>%
   group_by(Province_State) %>%
@@ -265,7 +262,6 @@ us_tested_labels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 
-########
 
 # Load shape file and customized labels for static choropleth map
 
@@ -284,9 +280,6 @@ us_master <- state_daily_master %>%
          "positive_rate" = round(positive/total_tested,2)) %>%
   arrange(desc(cum_confirmed)) %>%
   select(!date)
-
-
-
 
 
 table_header = htmltools::withTags(table(
