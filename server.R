@@ -298,31 +298,22 @@ server <- function(input, output) {
     if (input$start_date == 1) {
       state_daily_master %>%
         filter(Province_State == input$state_filter) %>%
-        # group_by(Province_State,date) %>%
-        # summarise(confirmed = sum(cum_confirmed,na.rm = T),
-        #           deaths = sum(cum_deaths,na.rm = T),
-        #           daily_confirmed = sum(daily_confirmed,na.rm = T),
-        #           daily_deaths = sum(daily_deaths,na.rm = T)) %>%
         filter(cum_confirmed > 0)
     } else if (input$start_date == 2) {
       state_daily_master %>%
         filter(Province_State == input$state_filter) %>%
-        # group_by(Province_State,date) %>%
-        # summarise(confirmed = sum(cum_confirmed,na.rm = T),
-        #           deaths = sum(cum_deaths,na.rm = T),
-        #           daily_confirmed = sum(daily_confirmed,na.rm = T),
-        #           daily_deaths = sum(daily_deaths,na.rm = T)) %>%
         filter(cum_confirmed >= 100)
     } else if (input$start_date == 3) {
       state_daily_master %>%
         filter(Province_State == input$state_filter) %>%
-        # group_by(Province_State,date) %>%
-        # summarise(confirmed = sum(cum_confirmed,na.rm = T),
-        #           deaths = sum(cum_deaths,na.rm = T),
-        #           daily_confirmed = sum(daily_confirmed,na.rm = T),
-        #           daily_deaths = sum(daily_deaths,na.rm = T)) %>%
         filter(cum_deaths >= 100)
     }
+  })
+  
+  state_daily_master_multi_selection <- reactive({
+    state_daily_master %>%
+      filter(Province_State %in% input$Multi_state_filter)
+    
   })
   
   
@@ -575,6 +566,29 @@ server <- function(input, output) {
     }
   })
   
+  output$state_comparison <- renderPlotly({
+    if (input$variable_choice2 == 1) {
+      plot_ly(state_daily_master_multi_selection(),x = ~date) %>%
+        add_lines(y = ~cum_confirmed, color = ~Province_State, colors = mycolors) %>%
+        layout(yaxis = list(tickformat = "0",title = "Count"),
+               title = paste0("State Confirmed Comparison"),
+               paper_bgcolor='transparent', plot_bgcolor='transparent',
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
+    } else {
+      
+      plot_ly(state_daily_master_multi_selection(),x = ~date) %>%
+        add_lines(y = ~cum_deaths, color = ~Province_State, colors = mycolors) %>%
+        layout(yaxis = list(tickformat = "0",title = "Count"),
+               title = paste0("State Deaths Comparison"),
+               paper_bgcolor='transparent', plot_bgcolor='transparent',
+               legend = list(x = 0,y = 1)) %>%
+        config(displayModeBar = F)
+    }
+
+  })
+  
+
   state_daily_top_confirmed <- reactive({
     state_daily_master %>%
     arrange(date,desc(cum_confirmed),Province_State) %>%
@@ -597,9 +611,6 @@ server <- function(input, output) {
     })
 
 
-  
-  
-  
   output$top_states <- renderPlotly({
     if (input$confirmed_deaths == 1) {
       state_daily_top_confirmed() %>%

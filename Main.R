@@ -8,6 +8,7 @@ library(DT)
 library(dplyr)
 library(shiny)
 library(shinydashboard)
+library(RColorBrewer)
 
 # Load Library
 
@@ -338,4 +339,14 @@ full_table <- datatable(us_master[,c(1,2,20,3,21,22,6,23,24,13,15,7,25,10:12)],c
 full_table
 
 # Create static datatable
+
+
+# Create color palette for all states
+
+nb.cols <- length(unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State)))
+mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols)
+
+# Create color palette for all states
+
+
 

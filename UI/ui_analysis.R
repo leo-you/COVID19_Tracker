@@ -23,26 +23,40 @@ body_analysis <- dashboardBody(
     )
   ),
   fluidRow(
-    box(
+    
+    tabBox(
       width = 6,title = "State Trend", height = 550,
-      div(style="display: inline-block;vertical-align:top; width: 150px;",
-          selectInput("state_filter", "Select States",
-                      choices = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State)),
-                      selected = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State))[1])),
-      div(style="display: inline-block;vertical-align:top; width: 150px;",
-          selectInput("variable_choice", "Select Variable", 
-                      choices = c("Cumulative" = 1,"Daily" = 2), 
-                      selected = 1)),
-      div(style="display: inline-block;vertical-align:top; width: 150px;",
-          selectInput("start_date", "Plot start from:",
-                      choices = list("1st Case" = 1,
-                                     "100th Case" = 2,
-                                     "100th Death" = 3),
-                      selected = 1)),
-
-      plotlyOutput("state_trend",height = "400px"),
-      helpText(tags$em("Recover data is shown depend on avalability for each state."))
-      
+      tabPanel("State Breakdown",
+               div(style="display: inline-block;vertical-align:top; width: 150px;",
+                   selectInput("state_filter", "Select States",
+                               choices = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State)),
+                               selected = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State))[1])),
+               div(style="display: inline-block;vertical-align:top; width: 150px;",
+                   selectInput("variable_choice", "Select Variable", 
+                               choices = c("Cumulative" = 1,"Daily" = 2), 
+                               selected = 1)),
+               div(style="display: inline-block;vertical-align:top; width: 150px;",
+                   selectInput("start_date", "Plot start from:",
+                               choices = list("1st Case" = 1,
+                                              "100th Case" = 2,
+                                              "100th Death" = 3),
+                               selected = 1)),
+               
+               plotlyOutput("state_trend",height = "400px"),
+               helpText(tags$em("Recover data is shown depend on avalability for each state."))),
+      tabPanel("State Comparison",
+               div(style="display: inline-block;vertical-align:top; width: 300px;",
+                   selectizeInput("Multi_state_filter", "Select States (Max 5)",
+                               choices = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State)),
+                               selected = unique(as.character(state_daily_master[state_daily_master$cum_confirmed > 0,]$Province_State))[1],
+                               multiple = TRUE,options = list(maxItems = 5))),
+               div(style="display: inline-block;vertical-align:top; width: 200px;",
+                   selectInput("variable_choice2", "Select Variable", 
+                               choices = c("Cumulative Confirmed" = 1,"Cumulative Deaths" = 2), 
+                               selected = 1)),
+               plotlyOutput("state_comparison",height = "400px")
+               
+      )
     ),
     box(
       width = 6,title = "Top States", height = 550,

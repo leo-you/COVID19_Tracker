@@ -34,6 +34,7 @@ body_about <- dashboardBody(
           tags$li("tigris"),
           tags$li("DT"),
           tags$li("dplyr"),
+          tags$li("RColorBrewer"),
           tags$br(),
           tags$h4("Disclaimer"),
           "This tracker is a personal project and for education purpose only. The data and analysis only represent the creater's own
