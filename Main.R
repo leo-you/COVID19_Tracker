@@ -84,14 +84,14 @@ global_recovered <- read.csv(file = "Data/time_series_covid19_recovered_global.c
 us_confirmed_sub <- us_confirmed %>%
   pivot_longer(names_to = "date",cols = 12:ncol(us_confirmed)) %>%
   group_by(UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,date) %>%
-  summarise("confirmed" = sum(value, na.rm = T))
+  summarise("confirmed" = sum(value, na.rm = T),.groups = "drop_last")
 
 us_confirmed_sub$date <- as.Date(substr(us_confirmed_sub$date,2,nchar("X1.26.20")),format = "%m.%d.%y")
 
 us_deaths_sub <- us_deaths %>%
   pivot_longer(names_to = "date",cols = 13:ncol(us_deaths)) %>%
   group_by(UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,Population,date) %>%
-  summarise("deaths" = sum(value, na.rm = T))
+  summarise("deaths" = sum(value, na.rm = T),.groups = "drop_last")
 
 us_deaths_sub$date <- as.Date(substr(us_deaths_sub$date,2,nchar("X1.26.20")),format = "%m.%d.%y")
 
@@ -110,10 +110,10 @@ us_evolution <- merge(us_confirmed_sub,us_deaths_sub, by = c(
   "UID","iso2","iso3","code3","FIPS","Admin2","Province_State","Country_Region","Lat","Long_","Combined_Key","date")
                       ) %>%
   select(Province_State:deaths) %>%
-  arrange(Combined_Key,date) %>%
+  arrange(Province_State,Combined_Key,date) %>%
   group_by(Province_State,Country_Region,Lat,Long_,Combined_Key,Population,date) %>%
   summarise("cum_confirmed" = sum(confirmed,na.rm = T),
-            "cum_deaths" = sum(deaths,na.rm = T)) %>%
+            "cum_deaths" = sum(deaths,na.rm = T),.groups = "drop_last") %>%
   mutate(daily_confirmed = ifelse(is.na(cum_confirmed - lag(cum_confirmed)),cum_confirmed,cum_confirmed - lag(cum_confirmed)),
          daily_deaths = ifelse(is.na(cum_deaths - lag(cum_deaths)),cum_deaths,cum_deaths - lag(cum_deaths)))
 
@@ -126,7 +126,7 @@ state_daily_master_sub <- us_evolution %>%
             "cum_deaths" = sum(cum_deaths,na.rm = T),
             "daily_confirmed" = sum(daily_confirmed,na.rm = T),
             "daily_deaths" = sum(daily_deaths,na.rm = T),
-            "population" = sum(Population,na.rm = T))
+            "population" = sum(Population,na.rm = T),.groups = "drop_last")
 
 state_daily_master_sub <- merge(state_daily_master_sub, us_test_evolution, by.x=c("Province_State","date"),
                             by.y=c("name","date"),all.x = TRUE)
@@ -165,7 +165,7 @@ us_evolution_us <- state_daily_master %>%
             "icu" = sum(inIcuCurrently,na.rm = T),
             "ventilator" = sum(onVentilatorCurrently,na.rm = T),
             "positive_rate" = sum(positive,na.rm = T)/sum(total_tested,na.rm = T),
-            "death_rate" = sum(cum_deaths,na.rm = T)/sum(cum_confirmed,na.rm = T)
+            "death_rate" = sum(cum_deaths,na.rm = T)/sum(cum_confirmed,na.rm = T),.groups = "drop"
             )
 
   
@@ -336,7 +336,6 @@ full_table <- datatable(us_master[,c(1,2,20,3,21,22,6,23,24,13,15,7,25,10:12)],c
     backgroundPosition = 'center'
   ) 
 
-full_table
 
 # Create static datatable
 

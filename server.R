@@ -327,7 +327,7 @@ server <- function(input, output) {
       group_by(Combined_Key,Lat,Long_) %>%
       summarise("confirmed" = sum(cum_confirmed,na.rm = T),
                 "deaths" = sum(cum_deaths,na.rm = T),
-                "population" = sum(Population,na.rm = T)) %>%
+                "population" = sum(Population,na.rm = T),.groups = "drop_last") %>%
       mutate(confirmed_pop = round(confirmed/population,2),
              deaths_pop = round(deaths/population,2))%>%
       filter(confirmed > 0)
@@ -506,7 +506,7 @@ server <- function(input, output) {
   })
   
   output$hospitalized_data <- renderPlotly({
-    plot_ly(data = filter(us_evolution_us,us_evolution_us$hospitalized > 0), x = ~date) %>%
+    plot_ly(data = filter(us_evolution_us,hospitalized > 0), x = ~date) %>%
       add_lines(y = ~hospitalized, name = "Hospitalized") %>%
       add_lines(y = ~icu, name = "In ICU") %>%
       add_lines(y = ~ventilator, name = "On Ventilator") %>%
@@ -525,7 +525,7 @@ server <- function(input, output) {
                           '<br><b>Deaths:</b> ', cum_deaths,'<br><b>Total Tested:</b> ', total_tested,
                           '<br><b>Positive %:</b> ', paste0(round(positive/total_tested,2)*100,"%")
             ),
-            marker = list(size = ~total_tested/20000, opacity = 0.5)) %>%
+            marker = list(size = ~total_tested/50000, opacity = 0.5)) %>%
       layout(yaxis = list(tickformat = "0",title = "Cumulative Deaths"),
              xaxis = list(tickformat = "0",title = "Cumulative Confirmed"),
              title = "",
