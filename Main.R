@@ -20,45 +20,45 @@ DownloadData <- function(){
     destfile = "Data/covid19.zip"
   )
   
-  data_path <- "COVID-19-master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_"
+  data_path_case <- "COVID-19-master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_"
 
   unzip(
     zipfile = "Data/covid19.zip",
-    files = paste0(data_path,c("confirmed_US.csv","deaths_US.csv",
+    files = paste0(data_path_case,c("confirmed_US.csv","deaths_US.csv",
                                "confirmed_global.csv","deaths_global.csv","recovered_global.csv")),
     exdir = "Data",
     junkpaths = T
-    
   )
-}
-
-
-DownloadData_hospital <- function(){
+  
   download.file(
     url = "https://github.com/COVID19Tracking/covid-tracking-data/archive/master.zip",
     destfile = "Data/covid19_hospital.zip"
   )
   
-  data_path <- "covid-tracking-data-master/data/"
+  data_path_hospital <- "covid-tracking-data-master/data/"
   
   unzip(
     zipfile = "Data/covid19_hospital.zip",
-    files = paste0(data_path,c("states_daily_4pm_et.csv","states_current.csv","states_info.csv")),
+    files = paste0(data_path_hospital,c("states_daily_4pm_et.csv","states_current.csv","states_info.csv")),
     exdir = "Data",
     junkpaths = T
-    
   )
+  
+  unlink("Data/covid19.zip")
+  unlink("Data/covid19_hospital.zip")
+  
 }
+
+
 
 UpdateData <- function(){
   T_refresh = 12 # hours
   if (!dir.exists("Data")) {
     dir.create("Data")
     DownloadData()
-  } else if ((!file.exists("Data/covid19.zip")) || as.double(Sys.time() - file.info("Data/covid19.zip")$ctime,units = "hours" ) > T_refresh) {
+  } else if ((!file.exists("Data/time_series_covid19_confirmed_US.csv")) || as.double(Sys.time() - file.info("Data/time_series_covid19_confirmed_US.csv")$ctime,units = "hours" ) > T_refresh) {
     DownloadData()
-    DownloadData_hospital()
-    
+
   }
 }
 
@@ -73,9 +73,9 @@ us_deaths <- read.csv(file = "Data/time_series_covid19_deaths_US.csv")
 us_test <- read.csv(file = "Data/states_daily_4pm_et.csv")
 states_info <- read.csv("Data/states_info.csv")
 
-global_confirmed <- read.csv(file = "Data/time_series_covid19_confirmed_global.csv")
-global_deaths <- read.csv(file = "Data/time_series_covid19_deaths_global.csv")
-global_recovered <- read.csv(file = "Data/time_series_covid19_recovered_global.csv")
+# global_confirmed <- read.csv(file = "Data/time_series_covid19_confirmed_global.csv")
+# global_deaths <- read.csv(file = "Data/time_series_covid19_deaths_global.csv")
+# global_recovered <- read.csv(file = "Data/time_series_covid19_recovered_global.csv")
 
 # Load Data
 
@@ -300,7 +300,7 @@ table_header = htmltools::withTags(table(
       th(rowspan = 2, 'Positive Rate'),
       th(rowspan = 2, 'Hospitalized'),
       th(rowspan = 2, 'In ICU'),
-      th(rowspan = 2, 'on Ventilator')
+      th(rowspan = 2, 'On Ventilator')
     ),
     tr(
       lapply(rep(c('Count', 'Growth %'), 2), th)
@@ -347,5 +347,6 @@ mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols)
 
 # Create color palette for all states
 
-
+# Remove intermediate tables
+remove(state_daily_master_sub,states_info,us_confirmed,us_confirmed_sub,us_deaths,us_deaths_sub,us_test,us_test_evolution,us_test_sub)
 
