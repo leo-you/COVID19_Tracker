@@ -86,14 +86,14 @@ us_confirmed_sub <- us_confirmed %>%
   group_by(UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,date) %>%
   summarise("confirmed" = sum(value, na.rm = T),.groups = "drop_last")
 
-us_confirmed_sub$date <- as.Date(substr(us_confirmed_sub$date,2,nchar("X1.26.20")),format = "%m.%d.%y")
+us_confirmed_sub$date <- as.Date(substr(us_confirmed_sub$date,2,nchar(us_confirmed_sub$date)),format = "%m.%d.%y")
 
 us_deaths_sub <- us_deaths %>%
   pivot_longer(names_to = "date",cols = 13:ncol(us_deaths)) %>%
   group_by(UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,Population,date) %>%
   summarise("deaths" = sum(value, na.rm = T),.groups = "drop_last")
 
-us_deaths_sub$date <- as.Date(substr(us_deaths_sub$date,2,nchar("X1.26.20")),format = "%m.%d.%y")
+us_deaths_sub$date <- as.Date(substr(us_deaths_sub$date,2,nchar(us_deaths_sub$date)),format = "%m.%d.%y")
 
 
 us_test_sub <- merge(us_test,states_info,by= "state",all.x = TRUE)
@@ -309,7 +309,10 @@ table_header = htmltools::withTags(table(
 ))
 
 
-full_table <- datatable(us_master[,c(1,2,20,3,21,22,6,23,24,13,15,7,25,10:12)],container = table_header,rownames = FALSE, 
+full_table <- datatable(us_master[,c("Province_State","cum_confirmed","confirmed_growth","cum_deaths","deaths_growth",
+                                     "deaths_rate","population","confirmed_pop","deaths_pop","recovered","total_tested",
+                                     "positive","positive_rate","hospitalizedCurrently","inIcuCurrently","onVentilatorCurrently"
+                                     )],container = table_header,rownames = FALSE, 
                         extensions = c('FixedHeader',"Scroller","FixedColumns"),
           options = list(pageLength = nrow(us_master),
                          dom = 't',

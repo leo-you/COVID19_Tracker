@@ -9,10 +9,10 @@ server <- function(input, output) {
   us_master_filtered <- reactive({
 
     state_daily_master %>%
-      filter(date <= input$Date_Slider & date >= input$Date_Slider-1) %>%
+      filter(date <= input$Date_Slider-1 & date >= input$Date_Slider-2) %>%
       mutate(confirmed_growth = cum_confirmed/lag(cum_confirmed) - 1,
              deaths_growth = cum_deaths/lag(cum_deaths) - 1) %>%
-      filter(date == input$Date_Slider & cum_confirmed > 0 & population > 0) %>%
+      filter(date == input$Date_Slider-1 & cum_confirmed > 0 & population > 0) %>%
       mutate("deaths_rate" = cum_deaths/cum_confirmed,
              "confirmed_pop" = round(cum_confirmed * 1000000 / population,2),
              "deaths_pop" = round(cum_deaths* 1000000/ population,2),
@@ -25,7 +25,7 @@ server <- function(input, output) {
 
   output$table_case = DT::renderDataTable(isolate(
 
-    datatable(us_master_filtered()[,c(1,2,20,3,21,22)],rownames = FALSE,
+    datatable(us_master_filtered()[,c("Province_State","cum_confirmed","confirmed_growth","cum_deaths","deaths_growth","deaths_rate")],rownames = FALSE,
               colnames = c('State', 'Confirmed Cases', 'Confirmed Growth', 'Deaths Cases', 'Deaths Growth',"Death Rate"),
               extensions = c('FixedHeader',"Scroller"),
               options = list(pageLength = nrow(us_master_filtered()),
@@ -55,14 +55,14 @@ server <- function(input, output) {
   proxy_table_case = dataTableProxy('table_case')
 
   observe({
-    replaceData(proxy_table_case, us_master_filtered()[,c(1,2,20,3,21,22)], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
+    replaceData(proxy_table_case, us_master_filtered()[,c("Province_State","cum_confirmed","confirmed_growth","cum_deaths","deaths_growth","deaths_rate")], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
   })
 
 
 
   output$table_population = renderDT({isolate(
 
-    datatable(us_master_filtered()[,c(1,6,23,24)],rownames = FALSE,
+    datatable(us_master_filtered()[,c("Province_State","population","confirmed_pop","deaths_pop")],rownames = FALSE,
               colnames = c('State', 'Population/(M)', 'Confirmed Cases/Population (1M)', 'Deaths Cases/Population (1M)'),
               extensions = c('FixedHeader',"Scroller"),
               options = list(pageLength = nrow(us_master_filtered()),
@@ -91,7 +91,7 @@ server <- function(input, output) {
   proxy_table_population = dataTableProxy('table_population')
 
   observe({
-    replaceData(proxy_table_population, us_master_filtered()[,c(1,6,23,24)], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
+    replaceData(proxy_table_population, us_master_filtered()[,c("Province_State","confirmed_pop","deaths_pop")], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
   })
   
 
@@ -104,8 +104,8 @@ server <- function(input, output) {
   
   output$table_tested = renderDT({isolate(
     
-    datatable(us_master_filtered()[,c(1,15,7,8,25)],rownames = FALSE,
-              colnames = c('State', 'Total Tested', 'Positive', 'Negative',"Positive %"),
+    datatable(us_master_filtered()[,c("Province_State","total_tested","positive","positive_rate")],rownames = FALSE,
+              colnames = c('State', 'Total Tested', 'Positive',"Positive %"),
               extensions = c('FixedHeader',"Scroller"),
               options = list(pageLength = nrow(us_master_filtered()),
                              deferRender = TRUE,
@@ -124,7 +124,7 @@ server <- function(input, output) {
   proxy_table_tested = dataTableProxy('table_tested')
   
   observe({
-    replaceData(proxy_table_tested, us_master_filtered()[,c(1,15,7,8,25)], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
+    replaceData(proxy_table_tested, us_master_filtered()[,c("Province_State","total_tested","positive","positive_rate")], resetPaging = FALSE,clearSelection = "all",rownames = FALSE)
   })
   
   
@@ -525,7 +525,7 @@ server <- function(input, output) {
                           '<br><b>Deaths:</b> ', cum_deaths,'<br><b>Total Tested:</b> ', total_tested,
                           '<br><b>Positive %:</b> ', paste0(round(positive/total_tested,2)*100,"%")
             ),
-            marker = list(size = ~total_tested/50000, opacity = 0.5)) %>%
+            marker = list(size = ~total_tested/500000, opacity = 0.5)) %>%
       layout(yaxis = list(tickformat = "0",title = "Cumulative Deaths"),
              xaxis = list(tickformat = "0",title = "Cumulative Confirmed"),
              title = "",
