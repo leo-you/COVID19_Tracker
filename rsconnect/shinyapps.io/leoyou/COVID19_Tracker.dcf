@@ -5,8 +5,6 @@ account: leoyou
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2458959
-bundleId: 3273833
+bundleId: 3843826
 url: https://leoyou.shinyapps.io/COVID19_Tracker/
-when: 1592252740.93897
-asMultiple: FALSE
-asStatic: FALSE
+when: 1605029789.79146
