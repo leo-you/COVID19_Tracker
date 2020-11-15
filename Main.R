@@ -12,6 +12,10 @@ library(RColorBrewer)
 
 # Load Library
 
+# Turn off scientific notation
+options(scipen=999)
+
+
 # Function to download and update data as necessary
 
 DownloadData <- function(){
@@ -200,8 +204,8 @@ bins_confirmed = c(0,quantile(us_case_map_state$cum_confirmed,0.2),
 pal_confirmed <- colorBin("YlOrRd", domain = us_case_map_state$cum_confirmed, bins = bins_confirmed)
 
 us_confirmed_labels <- sprintf(
-  "<strong>State: </strong>%s<br/><strong>Confirmed Cases: </strong>%g",
-  us_case_map_state$NAME, us_case_map_state$cum_confirmed
+  "<strong>State: </strong>%s<br/><strong>Confirmed Cases: </strong>%s",
+  us_case_map_state$NAME, format(us_case_map_state$cum_confirmed,scientific = FALSE)
 ) %>% lapply(htmltools::HTML)
 
 
@@ -215,7 +219,7 @@ bins_deaths = c(0,quantile(us_case_map_state$cum_deaths,0.2),
 pal_deaths <- colorBin("YlOrRd", domain = us_case_map_state$cum_deaths, bins = bins_deaths)
 
 us_deaths_labels <- sprintf(
-  "<strong>State: </strong>%s<br/><strong>Deaths Cases: </strong>%g",
+  "<strong>State: </strong>%s<br/><strong>Deaths Cases: </strong>%s",
   us_case_map_state$NAME, us_case_map_state$cum_deaths
 ) %>% lapply(htmltools::HTML)
 

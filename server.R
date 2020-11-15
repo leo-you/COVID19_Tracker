@@ -423,7 +423,24 @@ server <- function(input, output) {
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              title = "US Daily Cases Trend",
              barmode = "relative",legend = list(x = 0,y = 1),
-             xaxis = list(rangeslider = list(type = "Date"))) %>%
+             xaxis = list(
+               rangeselector = list(
+                 buttons = list(
+                   list(
+                     count = 3,
+                     label = "3 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(
+                     count = 6,
+                     label = "6 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(step = "all"))),
+               
+               rangeslider = list(type = "date"))
+             
+             ) %>%
       config(displayModeBar = F)
       
 
@@ -439,7 +456,23 @@ server <- function(input, output) {
                title = "US Cumulative Cases",
                paper_bgcolor='transparent', plot_bgcolor='transparent',
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
 
     } else {
@@ -451,7 +484,23 @@ server <- function(input, output) {
                title = "US Cumulative Cases",
                paper_bgcolor='transparent', plot_bgcolor='transparent',
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
     }
   })
@@ -468,7 +517,23 @@ server <- function(input, output) {
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              title = "US Cumulative Cases Barplot",
              barmode = "relative",legend = list(x = 0,y = 1),
-             xaxis = list(rangeslider = list(type = "Date"))) %>%
+             xaxis = list(
+               rangeselector = list(
+                 buttons = list(
+                   list(
+                     count = 3,
+                     label = "3 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(
+                     count = 6,
+                     label = "6 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(step = "all"))),
+               
+               rangeslider = list(type = "date"))
+             ) %>%
       config(displayModeBar = F)
   }))
   
@@ -479,7 +544,23 @@ server <- function(input, output) {
       layout(yaxis = list(tickformat = ".1%",title = "Fatality"),
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              title = "US Fatality",legend = list(x = 0,y = 1),
-             xaxis = list(rangeslider = list(type = "Date"))) %>%
+             xaxis = list(
+               rangeselector = list(
+                 buttons = list(
+                   list(
+                     count = 3,
+                     label = "3 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(
+                     count = 6,
+                     label = "6 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(step = "all"))),
+               
+               rangeslider = list(type = "date"))
+             ) %>%
       config(displayModeBar = F)
   }))
   
@@ -506,7 +587,22 @@ server <- function(input, output) {
                hoverformat = "%",
                showgrid = FALSE
              ),
-             xaxis = list(rangeslider = list(type = "Date"))
+             xaxis = list(
+               rangeselector = list(
+                 buttons = list(
+                   list(
+                     count = 3,
+                     label = "3 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(
+                     count = 6,
+                     label = "6 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(step = "all"))),
+               
+               rangeslider = list(type = "date"))
       ) %>%
       config(displayModeBar = F)
   })
@@ -520,7 +616,23 @@ server <- function(input, output) {
              title = "US Hospitalized Patients",
              paper_bgcolor='transparent', plot_bgcolor='transparent',
              legend = list(x = 0,y = 1),
-             xaxis = list(rangeslider = list(type = "Date"))) %>%
+             xaxis = list(
+               rangeselector = list(
+                 buttons = list(
+                   list(
+                     count = 3,
+                     label = "3 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(
+                     count = 6,
+                     label = "6 mo",
+                     step = "month",
+                     stepmode = "backward"),
+                   list(step = "all"))),
+               
+               rangeslider = list(type = "date"))
+             ) %>%
       config(displayModeBar = F)
   })
   
@@ -555,7 +667,23 @@ server <- function(input, output) {
                title = paste0(input$state_filter," Cumulative Trend"),
                paper_bgcolor='transparent', plot_bgcolor='transparent',
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
     } else {
 
@@ -570,7 +698,23 @@ server <- function(input, output) {
                title = paste0(input$state_filter," Daily Trend"),
                paper_bgcolor='transparent', plot_bgcolor='transparent', barmode = "relative",
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
     }
   })
@@ -583,7 +727,23 @@ server <- function(input, output) {
                title = paste0("State Confirmed Comparison"),
                paper_bgcolor='transparent', plot_bgcolor='transparent',
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
     } else {
       
@@ -593,7 +753,23 @@ server <- function(input, output) {
                title = paste0("State Deaths Comparison"),
                paper_bgcolor='transparent', plot_bgcolor='transparent',
                legend = list(x = 0,y = 1),
-               xaxis = list(rangeslider = list(type = "Date"))) %>%
+               xaxis = list(
+                 rangeselector = list(
+                   buttons = list(
+                     list(
+                       count = 3,
+                       label = "3 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(
+                       count = 6,
+                       label = "6 mo",
+                       step = "month",
+                       stepmode = "backward"),
+                     list(step = "all"))),
+                 
+                 rangeslider = list(type = "date"))
+               ) %>%
         config(displayModeBar = F)
     }
 
